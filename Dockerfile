@@ -1,8 +1,8 @@
-FROM fulcrum/php:latest-alpine
+FROM fulcrum/php:7-latest
 MAINTAINER IF Fulcrum "fulcrum@ifsight.net"
 
-RUN apk add --no-cache --virtual containerbuild git php5-phar              && \
-    apk add --no-cache curl curl-dev mysql-client php5-openssl             && \
+RUN apk add --no-cache --virtual containerbuild git php7-phar              && \
+    apk add --no-cache curl curl-dev mysql-client php7-openssl             && \
     cd /usr/local                                                          && \
     curl -sS https://getcomposer.org/installer | php                       && \
     /bin/mv composer.phar bin/composer                                     && \
