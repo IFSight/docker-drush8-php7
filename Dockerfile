@@ -1,7 +1,7 @@
 FROM fulcrum/php:7-latest
 MAINTAINER IF Fulcrum "fulcrum@ifsight.net"
 
-RUN apk add --no-cache --virtual containerbuild git php7-phar              && \
+RUN apk add --no-cache --virtual containerbuild git php7-phar binutils     && \
     apk add --no-cache curl curl-dev mysql-client php7-openssl             && \
     cd /usr/local                                                          && \
     curl -sS https://getcomposer.org/installer | php                       && \
@@ -16,8 +16,16 @@ RUN apk add --no-cache --virtual containerbuild git php7-phar              && \
     mv /tmp/phphome/.drush/registry_rebuild /usr/share/drush/commands/     && \
     deluser php                                                            && \
     adduser -h /var/www/html -s /bin/sh -D -H -u 1971 php                  && \
+    find /bin      -type f -exec strip {} \;                               && \
+    find /lib      -type f -exec strip {} \;                               && \
+    find /sbin     -type f -exec strip {} \;                               && \
+    find /usr/bin  -type f -exec strip {} \;                               && \
+    find /usr/lib  -type f -exec strip {} \;                               && \
+    find /usr/sbin -type f -exec strip {} \;                               && \
     apk del containerbuild                                                 && \
-    rm /usr/local/bin/composer
+    rm -rf /tmp/phphome /var/cache/apk/* /usr/local/bin/composer           && \
+    cd /usr/bin                                                            && \
+    rm mysql_waitpid mysqlimport mysqlshow mysqladmin mysqlcheck mysqldump myisam_ftdump
 
 USER php
 
